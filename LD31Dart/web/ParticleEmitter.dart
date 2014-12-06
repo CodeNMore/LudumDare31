@@ -37,7 +37,7 @@ class ParticleEmitter{
     _removed = 0;
   }
   
-  void tick(final double delta){
+  bool tick(final double delta){
     if(_generated < _amount){
       _emit();
       _generated++;
@@ -53,6 +53,10 @@ class ParticleEmitter{
         _particles.removeAt(_toRemove[i]);
     }
     _toRemove.clear();
+    
+    if(_particles.length <= 0)
+      return true;
+    return false;
   }
   
   void render(CanvasRenderingContext2D g){

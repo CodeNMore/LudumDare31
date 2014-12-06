@@ -17,7 +17,8 @@ class Particle{
     _life = life;
     _timer = 0.0;
     
-    double angleR = degAngle * 180 / PI;
+    num angleR = degAngle * PI / 180;
+    
     _xSpeed = speed * cos(angleR);
     _ySpeed = -speed * sin(angleR);
   }

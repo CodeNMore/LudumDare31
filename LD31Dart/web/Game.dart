@@ -1,7 +1,9 @@
 library ld31_game;
 
 import "dart:html";
-import "ParticleEmitter.dart";
+import "KeyManager.dart";
+import "State.dart";
+import "GameState.dart";
 
 class Game{
   
@@ -12,7 +14,7 @@ class Game{
   CanvasElement _canvas;
   CanvasRenderingContext2D g;
   
-  ParticleEmitter pe;
+  static State gameState;
   
   Game(CanvasElement canvas){
     _canvas = canvas;
@@ -21,19 +23,27 @@ class Game{
     g = canvas.getContext("2d");
     canvas.focus();
     
-    pe = new ParticleEmitter(200.0, 200.0, 100, 20, 20, "#FFFF00",
-        1, 2, 0, 90, 2, 6);
+    new KeyManager();
+    
+    //States
+    gameState = new GameState();
+    State.setState(gameState);
   }
   
   void _tick(final double delta){
-    pe.tick(delta);
+    //Tick
+    if(State.getState() != null)
+      State.getState().tick(delta);
   }
   
   void _render(){
-    g.fillStyle = "BLACK";
+    //Clear
+    g.fillStyle = "WHITE";
     g.fillRect(0, 0, WIDTH, HEIGHT);
     
-    pe.render(g);
+    //Render
+    if(State.getState() != null)
+      State.getState().render(g);
   }
   
   void _loop(final double _d){
