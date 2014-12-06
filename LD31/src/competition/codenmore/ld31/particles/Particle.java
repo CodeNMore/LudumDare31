@@ -31,7 +31,7 @@ public class Particle {
 	}
 	
 	public void render(Graphics g){
-		g.fillRect((int) x, (int) y, 5, 5);
+		g.fillRect((int) x, (int) y, 6, 6);
 	}
 
 	public float getX() {

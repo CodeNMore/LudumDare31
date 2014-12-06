@@ -10,14 +10,14 @@ public class ParticleEmitter {
 	private Random random;
 	
 	private float x, y;
-	private float minSpeed, maxSpeed;
+	private int minSpeed, maxSpeed;
 	private int amount, generated = 0, removed = 0;
 	private Color color;
 	private long last, now;
 	
 	private ArrayList<Particle> particles;
 
-	public ParticleEmitter(float x, float y, int amount, float minSpeed, float maxSpeed, Color color){
+	public ParticleEmitter(float x, float y, int amount, int minSpeed, int maxSpeed, Color color){
 		this.x = x;
 		this.y = y;
 		
@@ -63,11 +63,11 @@ public class ParticleEmitter {
 	}
 	
 	public void emit(){
-		particles.add(new Particle(x, y, randomSpeed(), randomAngle(), 500));
+		particles.add(new Particle(x, y, randomSpeed(), randomAngle(), 1000));
 	}
 	
-	private float randomSpeed(){
-		return random.nextFloat();
+	private int randomSpeed(){
+		return random.nextInt((maxSpeed - minSpeed) + 1) + minSpeed;
 	}
 	
 	private int randomAngle(){

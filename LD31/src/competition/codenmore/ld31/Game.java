@@ -28,7 +28,7 @@ public class Game implements Runnable{
 	
 	private void init(){
 		Assets.init();
-		pe = new ParticleEmitter(200, 200, 1000, Color.BLUE);
+		pe = new ParticleEmitter(200, 200, 1000, 1, 3, Color.BLUE);
 	}
 	
 	private void tick(){
