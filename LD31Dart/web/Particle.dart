@@ -7,11 +7,11 @@ class Particle{
   
   double _x, _y;
   double _xSpeed, _ySpeed;
-  int _life;
+  double _life;
   double _timer;
   String _style;
   
-  Particle(double x, double y, int degAngle, int speed, int life){
+  Particle(double x, double y, int degAngle, int speed, double life){
     _x = x;
     _y = y;
     _life = life;

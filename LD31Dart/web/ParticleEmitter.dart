@@ -14,9 +14,10 @@ class ParticleEmitter{
   int _amount, _generated, _removed;
   int _particleWidth, _particleHeight;
   int _minSpeed, _maxSpeed, _minAngle, _maxAngle, _minLife, _maxLife;
+  double _stableLife;
   
   ParticleEmitter(double x, double y, int amount, int particleWidth, int particleHeight, String style,
-      int minSpeed, int maxSpeed, int minAngle, int maxAngle, int minLife, int maxLife){
+      int minSpeed, int maxSpeed, int minAngle, int maxAngle, int minLife, int maxLife, double stableLife){
     _particles = [];
     _toRemove = [];
     
@@ -32,13 +33,14 @@ class ParticleEmitter{
     _maxAngle = maxAngle;
     _minLife = minLife;
     _maxLife = maxLife;
+    _stableLife = stableLife;
     
     _generated = 0;
     _removed = 0;
   }
   
   bool tick(final double delta){
-    if(_generated < _amount){
+    if(_amount == -1 || _generated < _amount){
       _emit();
       _generated++;
     }
@@ -67,12 +69,20 @@ class ParticleEmitter{
   }
   
   void _emit(){
-    _particles.add(new Particle(_x, _y, _randomize(_minAngle, _maxAngle), _randomize(_minSpeed, _maxSpeed), _randomize(_minLife, _maxLife)));
+    if(_stableLife == 0)
+      _particles.add(new Particle(_x, _y, _randomize(_minAngle, _maxAngle), _randomize(_minSpeed, _maxSpeed), _randomize(_minLife, _maxLife) + 0.0));
+    else
+      _particles.add(new Particle(_x, _y, _randomize(_minAngle, _maxAngle), _randomize(_minSpeed, _maxSpeed), _stableLife));
   }
   
   int _randomize(int min, int max){
     var r = new Random();
     return r.nextInt((max - min) + 1) + min;
+  }
+  
+  void setPos(double x, double y){
+    _x = x;
+    _y = y;
   }
   
 }

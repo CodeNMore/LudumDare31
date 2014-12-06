@@ -2,6 +2,7 @@ library ld31_game;
 
 import "dart:html";
 import "KeyManager.dart";
+import "MouseManager.dart";
 import "State.dart";
 import "GameState.dart";
 
@@ -24,6 +25,7 @@ class Game{
     canvas.focus();
     
     new KeyManager();
+    new MouseManager(canvas);
     
     //States
     gameState = new GameState();
@@ -66,6 +68,11 @@ class Game{
   
   void start(){
     window.requestAnimationFrame(_loop);
+  }
+  
+  static void clearScreen(CanvasRenderingContext2D g){
+    g.fillStyle = "WHITE";
+    g.clearRect(0, 0, WIDTH, HEIGHT);
   }
   
 }
