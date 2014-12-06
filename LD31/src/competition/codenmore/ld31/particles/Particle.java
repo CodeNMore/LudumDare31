@@ -8,9 +8,12 @@ public class Particle {
 	private float speed;
 	private float angle;
 	private int life, timer;
+	private int width, height;
 	private boolean active;
 	
-	public Particle(float x, float y, float speed, int degAngle, int life){
+	public Particle(float x, float y, float speed, int degAngle, int life, ParticleEmitter pe){
+		width = pe.getWidth();
+		height = pe.getHeight();
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
@@ -31,7 +34,7 @@ public class Particle {
 	}
 	
 	public void render(Graphics g){
-		g.fillRect((int) x, (int) y, 6, 6);
+		g.fillRect((int) x, (int) y, width, height);
 	}
 
 	public float getX() {

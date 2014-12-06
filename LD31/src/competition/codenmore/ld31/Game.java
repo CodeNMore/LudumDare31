@@ -24,17 +24,29 @@ public class Game implements Runnable{
 		display = new Display(TITLE, WIDTH, HEIGHT);
 	}
 	
-	ParticleEmitter pe;
+	ParticleEmitter pe, pe1, pe2;
 	
 	private void init(){
 		Assets.init();
-		pe = new ParticleEmitter(200, 200, 1000, 1, 3, Color.BLUE);
+		pe = new ParticleEmitter(200, 200, 10000, 2, 5, 0, 360, 5000, 8000, Color.BLUE);
+		pe.setWidth(8);
+		pe.setHeight(8);
+		
+		pe1 = new ParticleEmitter(200, 200, 10000, 2, 5, 0, 360, 5000, 8000, Color.GREEN);
+		pe1.setWidth(8);
+		pe1.setHeight(8);
+		
+		pe2 = new ParticleEmitter(200, 200, 10000, 2, 5, 0, 360, 5000, 8000, Color.MAGENTA);
+		pe2.setWidth(8);
+		pe2.setHeight(8);
 	}
 	
 	private void tick(){
 		pe.tick();
+		pe1.tick();
+		pe2.tick();
 	}
-	
+
 	private void render(){
 		bs = display.getCanvas().getBufferStrategy();
 		if(bs == null){
@@ -47,6 +59,8 @@ public class Game implements Runnable{
 		//RENDER
 		
 		pe.render(g);
+		pe1.render(g);
+		pe2.render(g);
 		
 		//END RENDER
 		bs.show();
@@ -57,7 +71,7 @@ public class Game implements Runnable{
 		init();
 		
 		int ns = 1000000000;
-		double TIME_PER_TICK = ns / 30D;
+		double TIME_PER_TICK = ns / 60D;
 		double delta = 0;
 		long now = 0;
 		long last = System.nanoTime();

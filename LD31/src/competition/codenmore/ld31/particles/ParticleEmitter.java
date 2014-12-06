@@ -10,20 +10,26 @@ public class ParticleEmitter {
 	private Random random;
 	
 	private float x, y;
-	private int minSpeed, maxSpeed;
+	private int width = 4, height = 4;
+	private int minSpeed, maxSpeed, minAngle, maxAngle, minLife, maxLife;
 	private int amount, generated = 0, removed = 0;
 	private Color color;
 	private long last, now;
+	private boolean swap = false;
 	
 	private ArrayList<Particle> particles;
 
-	public ParticleEmitter(float x, float y, int amount, int minSpeed, int maxSpeed, Color color){
+	public ParticleEmitter(float x, float y, int amount, int minSpeed, int maxSpeed, int minAngle, int maxAngle, int minLife, int maxLife, Color color){
 		this.x = x;
 		this.y = y;
 		
 		this.amount = amount;
 		this.minSpeed = minSpeed;
 		this.maxSpeed = maxSpeed;
+		this.minAngle = minAngle;
+		this.maxAngle = maxAngle;
+		this.minLife = minLife;
+		this.maxLife = maxLife;
 		this.color = color;
 		particles = new ArrayList<Particle>();
 		
@@ -32,7 +38,9 @@ public class ParticleEmitter {
 	}
 	
 	public boolean tick(){
-		if(generated <= amount){
+		swap = !swap;
+		
+		if(swap && generated <= amount){
 			emit();
 			generated++;
 		}
@@ -63,15 +71,75 @@ public class ParticleEmitter {
 	}
 	
 	public void emit(){
-		particles.add(new Particle(x, y, randomSpeed(), randomAngle(), 1000));
+		particles.add(new Particle(x, y, randomize(minSpeed, maxSpeed), randomize(minAngle, maxAngle), randomize(minLife, maxLife), this));
 	}
 	
-	private int randomSpeed(){
-		return random.nextInt((maxSpeed - minSpeed) + 1) + minSpeed;
+	private int randomize(int min, int max){
+		return random.nextInt((max - min) + 1) + min;
 	}
-	
-	private int randomAngle(){
-		return random.nextInt(360);
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getMinSpeed() {
+		return minSpeed;
+	}
+
+	public void setMinSpeed(int minSpeed) {
+		this.minSpeed = minSpeed;
+	}
+
+	public int getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(int maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 	
 }
