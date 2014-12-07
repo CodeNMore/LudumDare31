@@ -5,6 +5,7 @@ import "KeyManager.dart";
 import "MouseManager.dart";
 import "State.dart";
 import "GameState.dart";
+import "HUD.dart";
 
 class Game{
   
@@ -15,20 +16,24 @@ class Game{
   CanvasElement _canvas;
   CanvasRenderingContext2D g;
   
+  HUD _hud;
+  
   static State gameState;
   
-  Game(CanvasElement canvas){
+  Game(CanvasElement canvas, CanvasElement hudCanvas){
     _canvas = canvas;
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     g = canvas.getContext("2d");
     canvas.focus();
     
+    _hud = new HUD(hudCanvas);
+    
     new KeyManager();
     new MouseManager(canvas);
     
     //States
-    gameState = new GameState();
+    gameState = new GameState(_hud);
     State.setState(gameState);
   }
   
@@ -36,16 +41,22 @@ class Game{
     //Tick
     if(State.getState() != null)
       State.getState().tick(delta);
+    
+    //HUD
+    _hud.tick(delta);
   }
   
   void _render(){
     //Clear
-    g.fillStyle = "WHITE";
+    g.fillStyle = "#CCCCCC";
     g.fillRect(0, 0, WIDTH, HEIGHT);
     
     //Render
     if(State.getState() != null)
       State.getState().render(g);
+    
+    //HUD
+    _hud.render();
   }
   
   void _loop(final double _d){
@@ -68,11 +79,6 @@ class Game{
   
   void start(){
     window.requestAnimationFrame(_loop);
-  }
-  
-  static void clearScreen(CanvasRenderingContext2D g){
-    g.fillStyle = "WHITE";
-    g.clearRect(0, 0, WIDTH, HEIGHT);
   }
   
 }

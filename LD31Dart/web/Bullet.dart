@@ -26,7 +26,7 @@ class Bullet{
   bool tick(final double delta){
     _x += _xSpeed;
     _y += _ySpeed;
-    //TODO: CHECK FOR ENEMY COLLISION
+    
     if(_x < 0 || _x > Game.WIDTH || _y < 0 || _y > Game.HEIGHT)
       return true;
     
@@ -36,5 +36,17 @@ class Bullet{
   void render(CanvasRenderingContext2D g){
     g.fillRect(_x, _y, _width, _height);
   }
+  
+  bool isFromPlayer(){
+    return _isFromPlayer;
+  }
+  
+  double getX() => _x;
+  
+  double getY() => _y;
+  
+  int getWidth() => _width;
+  
+  int getHeight() => _height;
   
 }
