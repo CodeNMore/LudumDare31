@@ -13,7 +13,6 @@ class Gun{
   bool _canFire;
   
   static List<Bullet> _bullets;
-  static List<int> _toRemove, _toRemoveEmitters;
   static List<ParticleEmitter> _emitters;
   
   bool _isFromPlayer;
@@ -25,19 +24,17 @@ class Gun{
     _isFromPlayer = isFromPlayer;
     
     _bullets = [];
-    _toRemove = [];
-    _toRemoveEmitters = [];
     _emitters = [];
   }
   
-  void tickPlayer(final double delta, double x, double y){
+  void tickPlayer(final double delta, double x, double y, int offset){
     _timer += delta;
     
     if(!_canFire){
       if(_timer >= _fireDelay)
         _canFire = true;
     }else if(MouseManager.isPressed()){
-      _fire(MouseManager.getX(), MouseManager.getY(), x, y);
+      _fire(MouseManager.getX() + offset, MouseManager.getY(), x, y);
       
       _canFire = false;
       _timer = 0.0;
@@ -62,19 +59,21 @@ class Gun{
   static void tickBullets(final double delta){
     if(_bullets.length > 0){
        for(int i = 0;i < _bullets.length;++i){
-         if(_bullets[i].tick(delta))
-           _toRemove.add(i);
+         if(_bullets[i].tick(delta)){
+           _bullets.removeAt(i);
+           i--;
+         }
        }
      }
     
     if(_emitters.length > 0){
       for(int i = 0;i < _emitters.length;++i){
-        if(_emitters[i].tick(delta))
-          _toRemoveEmitters.add(i);
+        if(_emitters[i].tick(delta)){
+          _emitters.removeAt(i);
+          i--;
+        }
       }
     }
-       
-     iterateToRemove();
   }
   
   void _fire(int mx, int my, double x, double y){
@@ -83,38 +82,25 @@ class Gun{
     _bullets.add(new Bullet(x, y, rad, _isFromPlayer));
   }
   
-  static void iterateToRemove(){
-    for(int i = 0;i < _toRemove.length;++i){
-      if(_toRemove[i] < _bullets.length)
-        _bullets.removeAt(_toRemove[i]);
-    }
-    _toRemove.clear();
-    
-    for(int i = 0;i < _toRemoveEmitters.length;++i){
-      if(_toRemoveEmitters[i] < _emitters.length)
-        _emitters.removeAt(_toRemoveEmitters[i]);
-    }
-    _toRemoveEmitters.clear();
-  }
-  
   static int collision(Rectangle r, bool isPlayer){
     Rectangle r2;
     Bullet b;
     int timesCollided = 0;
     
-    for(int i = 0;i < _bullets.length;++i){
-      b = _bullets[i];
-      if((isPlayer && !b.isFromPlayer()) || (!isPlayer && b.isFromPlayer())){
-        r2 = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-        if(r2.intersects(r)){//COLLISION!
-          timesCollided++;
-          _toRemove.add(i);
-          _emitters.add(new ParticleEmitter(b.getX(), b.getY(), 8, 4, 4, "#333333", 1, 1, 0, 360, 1, 1, 0.5));
-        }
+    if(_bullets.length > 0){
+      for(int i = 0;i < _bullets.length;++i){
+       b = _bullets[i];
+       if((isPlayer && !b.isFromPlayer()) || (!isPlayer && b.isFromPlayer())){
+         r2 = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+         if(r2.intersects(r)){//COLLISION!
+           timesCollided++;
+           _emitters.add(new ParticleEmitter(b.getX(), b.getY(), 16, 4, 4, "#333333", 1, 1, 0, 360, 1, 1, 0.5));
+           _bullets.removeAt(i);
+           i--;
+         }
+       }
       }
     }
-    
-    iterateToRemove();
     
     return timesCollided;
   }
@@ -134,6 +120,10 @@ class Gun{
     for(int i = 0;i < _emitters.length;++i){
       _emitters[i].render(g);
     }
+  }
+  
+  static List<ParticleEmitter> getEmitters(){
+    return _emitters;
   }
   
 }

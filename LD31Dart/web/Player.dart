@@ -6,14 +6,15 @@ import "KeyManager.dart";
 import "Gun.dart";
 import "ParticleEmitter.dart";
 import "HUD.dart";
+import "EnemyManager.dart";
 
 class Player {
   
-  int _health = 100, _maxHealth = 100;
+  int _health = 130, _maxHealth = 130;
   int _width = 20, _height = 20;
   double _x, _y, _xSpeed, _ySpeed;
   double _moveSpeed = 1.0, _maxSpeed = 6.0;
-  double _friction = 0.35;
+  double _friction = 0.3;
   int _type = 0;
   HUD _hud;
   
@@ -34,13 +35,13 @@ class Player {
     
     trail = new ParticleEmitter(_x, _y, -1, 3, 3, "#FF33FF", 1, 2, 0, 360, 1, 1, 0.5);
     
-    _gun = new Gun(0.35, true);
+    _gun = new Gun(0.5, true);//.35
     
     bounds = new Rectangle(_x, _y, _width, _height);
   }
   
   void tick(final double delta){
-    _gun.tickPlayer(delta, _x + _width / 2, _y + _height / 2);
+    _gun.tickPlayer(delta, _x + _width / 2, _y + _height / 2, 0);
     
     _handleInput();
     _tickFriction();
@@ -50,6 +51,8 @@ class Player {
     trail.tick(delta);
     
     int times = Gun.collision(getBounds(), true);
+    EnemyManager.collisionWithModule();
+    
     _health -= times * 10;
     _hud.setHealth(_health);
     if(_health <= 0){
@@ -64,18 +67,24 @@ class Player {
   }
   
   void die(){
-    
+//    print("Main Player Dead");
   }
   
   void _finalMove(){
-    if(_x < 0)
+    if(_x + _xSpeed < 0){
       _x = 0.0;
-    else if(_x + _width >= Game.WIDTH)
+//      _xSpeed = 0.0;
+    }else if(_x + _width + _xSpeed >= Game.WIDTH){
       _x = Game.WIDTH - _width - 0.0;
-    if(_y < 0)
+//      _xSpeed = 0.0;
+    }
+    if(_y + _ySpeed < 0){
       _y = 0.0;
-    else if(_y + _height >= Game.HEIGHT)
+//      _ySpeed = 0.0;
+    }else if(_y + _height + _ySpeed >= Game.HEIGHT){
       _y = Game.HEIGHT - _height - 0.0;
+//      _ySpeed = 0.0;
+    }
     
     _x += _xSpeed;
     _y += _ySpeed;

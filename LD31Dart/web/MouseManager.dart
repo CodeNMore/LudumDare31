@@ -17,6 +17,7 @@ class MouseManager{
     canvas.onMouseMove.listen((MouseEvent e){
       _mouseX = e.client.x - _xo;
       _mouseY = e.client.y - _yo;
+//      print(_mouseX.toString() + "    " + _mouseY.toString());
     });
     
     canvas.onMouseDown.listen((MouseEvent e){

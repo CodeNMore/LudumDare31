@@ -9,7 +9,7 @@ import "HUD.dart";
 
 class Game{
   
-  static final int WIDTH = 720, HEIGHT = 480;
+  static final int WIDTH = 800, HEIGHT = 600;
   
   int _lastTimestamp = 0;
   
