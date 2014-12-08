@@ -5,7 +5,10 @@ import "KeyManager.dart";
 import "MouseManager.dart";
 import "State.dart";
 import "GameState.dart";
+import "MenuState.dart";
 import "HUD.dart";
+import "DeathState.dart";
+import "Sound.dart";
 
 class Game{
   
@@ -19,6 +22,8 @@ class Game{
   HUD _hud;
   
   static State gameState;
+  static State menuState;
+  static State deathState;
   
   Game(CanvasElement canvas, CanvasElement hudCanvas){
     _canvas = canvas;
@@ -32,9 +37,13 @@ class Game{
     new KeyManager();
     new MouseManager(canvas);
     
+    Sound.load();
+    
     //States
     gameState = new GameState(_hud);
-    State.setState(gameState);
+    menuState = new MenuState();
+    deathState = new DeathState();
+    State.setState(menuState);
   }
   
   void _tick(final double delta){

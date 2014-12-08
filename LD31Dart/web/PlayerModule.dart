@@ -1,6 +1,7 @@
 library ld31_player_module;
 
 import "dart:html";
+import "dart:math";
 import "Player.dart";
 import "Gun.dart";
 import "Path.dart";
@@ -24,7 +25,7 @@ class PlayerModule{
   Path _path;
   Vector _pathVector;
   
-  PlayerModule(Player player, double xo, double yo, double x, double y){
+  PlayerModule(Player player, double x, double y, double xo, double yo){
     _player = player;
     _xo = xo;
     _yo = yo;
@@ -37,10 +38,11 @@ class PlayerModule{
     _isAttached = false;
     
     _toIndex = 0;
-    _path = Path.paths[0];
+    var r = new Random();
+    _path = Path.paths[r.nextInt(Path.paths.length)];
     _pathVector = new Vector(0.0, 0.0, 0);
     
-    _gun = new Gun(0.6, true);
+    _gun = new Gun(0.8, true);
   }
   
   bool tick(final double delta){
@@ -48,7 +50,7 @@ class PlayerModule{
       _x = _player.getX() + _xo;
       _y = _player.getY() + _yo;
     
-      _gun.tickPlayer(delta, _x + _width / 2, _y + _height / 2, _width);
+      _gun.tickPlayer(delta, _x + _width / 2, _y + _height / 2, (_xo / 20).round(), (_yo / 20).round());
     
       int times = Gun.collision(getBounds(), true);
       _health -= times * 10;
@@ -126,6 +128,9 @@ class PlayerModule{
   }
   
   bool isAttached() => _isAttached;
+  
+  double getXOffset() => _xo;
+  double getYOffset() => _yo;
   
   void setAttached(bool t){
     _isAttached = t;

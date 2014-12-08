@@ -7,6 +7,10 @@ import "Gun.dart";
 import "ParticleEmitter.dart";
 import "HUD.dart";
 import "EnemyManager.dart";
+import "State.dart";
+import "DeathState.dart";
+import "Bomb.dart";
+import "Sound.dart";
 
 class Player {
   
@@ -17,7 +21,7 @@ class Player {
   double _friction = 0.3;
   int _type = 0;
   HUD _hud;
-  
+  double _bombTimer = 0.0;
   ParticleEmitter trail;
   
   Gun _gun;
@@ -35,13 +39,15 @@ class Player {
     
     trail = new ParticleEmitter(_x, _y, -1, 3, 3, "#FF33FF", 1, 2, 0, 360, 1, 1, 0.5);
     
-    _gun = new Gun(0.5, true);//.35
+    _gun = new Gun(0.45, true);//.35
     
     bounds = new Rectangle(_x, _y, _width, _height);
   }
   
   void tick(final double delta){
-    _gun.tickPlayer(delta, _x + _width / 2, _y + _height / 2, 0);
+    _bombTimer += delta;
+    
+    _gun.tickPlayer(delta, _x + _width / 2, _y + _height / 2, 0, 0);
     
     _handleInput();
     _tickFriction();
@@ -58,6 +64,9 @@ class Player {
     if(_health <= 0){
       die();
     }
+    
+    if(times > 0)
+      Sound.playHurtSound();
   }
       
   void render(CanvasRenderingContext2D g){
@@ -67,7 +76,9 @@ class Player {
   }
   
   void die(){
-//    print("Main Player Dead");
+    DeathState.setWave(_hud.getWave());
+    State.setState(Game.deathState);
+    Sound.playExplosionSound();
   }
   
   void _finalMove(){
@@ -132,6 +143,22 @@ class Player {
        if(_ySpeed > _maxSpeed)
         _ySpeed = _maxSpeed;
     }
+    
+    if(_bombTimer > 1.5 && KeyManager.isPressed(KeyCode.SPACE) && _hud.getBombs() > 0){
+      _hud.setBombs(_hud.getBombs() - 1);
+      EnemyManager.addBomb(new Bomb(_x, _y));
+      _bombTimer = 0.0;
+    }
+  }
+  
+  void reset(){
+    _x = Game.WIDTH / 2;
+    _y = Game.HEIGHT / 2;
+    _xSpeed = 0.0;
+    _ySpeed = 0.0;
+    _gun.resetInstance();
+    _health = _maxHealth;
+    _bombTimer = 0.0;
   }
   
   Rectangle getBounds(){
@@ -142,5 +169,6 @@ class Player {
   double getY() => _y;
   int getWidth() => _width;
   int getHeight() => _height;
+  int getHealth() => _health;
   
 }

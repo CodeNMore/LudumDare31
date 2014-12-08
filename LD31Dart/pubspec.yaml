@@ -1,4 +1,4 @@
-name: "LD31 Game"
-description: "Game for the Ludum Dare 31, by CodeNMore!"
+name: "LD31 - Block Brigade"
+description: "Block Brigade for the Ludum Dare 31, by CodeNMore!"
 dependencies:
   browser: any

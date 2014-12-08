@@ -5,6 +5,7 @@ import "dart:math";
 import "MouseManager.dart";
 import "Bullet.dart";
 import "ParticleEmitter.dart";
+import "Sound.dart";
 
 class Gun{
   
@@ -27,14 +28,14 @@ class Gun{
     _emitters = [];
   }
   
-  void tickPlayer(final double delta, double x, double y, int offset){
+  void tickPlayer(final double delta, double x, double y, int offsetx, int offsety){
     _timer += delta;
     
     if(!_canFire){
       if(_timer >= _fireDelay)
         _canFire = true;
     }else if(MouseManager.isPressed()){
-      _fire(MouseManager.getX() + offset, MouseManager.getY(), x, y);
+      _fire(MouseManager.getX() + offsetx, MouseManager.getY() + offsety, x, y);
       
       _canFire = false;
       _timer = 0.0;
@@ -120,6 +121,16 @@ class Gun{
     for(int i = 0;i < _emitters.length;++i){
       _emitters[i].render(g);
     }
+  }
+  
+  static void reset(){
+    _bullets.clear();
+    _emitters.clear();
+  }
+  
+  void resetInstance(){
+    _canFire = true;
+    _timer = 0.0;
   }
   
   static List<ParticleEmitter> getEmitters(){

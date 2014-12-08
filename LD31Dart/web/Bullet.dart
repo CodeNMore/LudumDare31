@@ -6,7 +6,7 @@ import "Game.dart";
 
 class Bullet{
   
-  static double _speed = 12.0;
+  static double _speed = 8.5;
   
   int _width = 6, _height = 6;
   

@@ -7,6 +7,7 @@ import "Path.dart";
 import "Vector.dart";
 import "Player.dart";
 import "Game.dart";
+import "Sound.dart";
 //import "ParticleEmitter.dart";
 
 class Enemy{
@@ -22,6 +23,8 @@ class Enemy{
   int _health, _minAccuracy, _maxAccuracy;
   Player _player;
   Gun _gun;
+  
+  double _timer, _waitTime = 1.0;
   
   int _toIndex;
   Vector _pathVector;
@@ -41,13 +44,17 @@ class Enemy{
     
     _toIndex = 0;
     _pathVector = new Vector(0.0, 0.0, 0);
+    _timer = 0.0;
     
 //    trail = new ParticleEmitter(_x, _y, -1, 3, 3, _mainColor, 1, 2, 0, 360, 1, 1, 0.4);
   }
   
   bool tick(final double delta){
     //Gun
-    _gun.tick(delta, _getAccuracy((_player.getX() + _player.getWidth() / 2).round()), _getAccuracy((_player.getY()  + _player.getHeight() / 2).round()), _x, _y, true);
+    if(_timer > _waitTime)
+      _gun.tick(delta, _getAccuracy((_player.getX() + _player.getWidth() / 2).round()), _getAccuracy((_player.getY()  + _player.getHeight() / 2).round()), _x, _y, true);
+    else
+      _timer += delta;
     
     //Move
     _handleMovement();
@@ -60,6 +67,9 @@ class Enemy{
     
     int times = Gun.collision(getBounds(), false);
     _health -= times * 10;
+    
+    if(times > 0)
+      Sound.playHurtSound();
     
     if(_health <= 0)
       return true;
@@ -132,27 +142,41 @@ class Enemy{
   }
   
   void _setStuff(){//TODO: Re-do health, gunspeed based on wave number, PATH
-    _path = Path.paths[0];
+    var r = new Random();
+    
+    _path = Path.paths[r.nextInt(Path.paths.length)];
     
     if(_type == 1){
       _mainColor = "#FF3333";
-      _health = 30;
-      _minAccuracy = -20;
-      _maxAccuracy = 20;
-      _gun = new Gun(0.8, false);
     }else if(_type == 2){
       _mainColor = "#33FF33";
-      _health = 40;
-      _minAccuracy = -23;
-      _maxAccuracy = 23;
-      _gun = new Gun(0.7, false);
     }else{
       _mainColor = "#3333FF";
-      _health = 50;
-      _minAccuracy = -28;
-      _maxAccuracy = 28;
-      _gun = new Gun(0.6, false);
     }
+    
+    int acc;
+    
+    if(_wave < 4){
+      acc = 30;
+    }else if(_wave < 7){
+      acc = 35;
+    }else{
+      acc = 40;
+    }
+    
+    _minAccuracy = -acc;
+    _maxAccuracy = acc;
+    if(r.nextBool()){
+     _gun = new Gun(0.8, false);
+     _health = 30;
+    }else{
+      _gun = new Gun(0.9, false);
+      _health = 20;
+    }
+  }
+  
+  void setHealth(int i){
+    _health = 0;
   }
   
   double getX() => _x;

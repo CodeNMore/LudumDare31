@@ -33,9 +33,30 @@ class Path{
       new Vector(707.0, 61.0, 0)
     ];
     static Path _diag1Path = new Path(_diag1PathCoordinates);
+    
+    
+    static List<Vector> _diag2PathCoordinates = [
+        new Vector(117.0, 94.0, 0),
+        new Vector(160.0, 507.0, 0),
+        new Vector(263.0, 102.0, 0),
+        new Vector(334.0, 509.0, 0),
+        new Vector(448.0, 103.0, 0),
+        new Vector(548.0, 531.0, 0),
+        new Vector(672.0, 114.0, 0)
+      ];
+      static Path _diag2Path = new Path(_diag2PathCoordinates);
+      
+      static List<Vector> _diag3PathCoordinates = [
+          new Vector(322.0, 195.0, 0),
+          new Vector(255.0, 251.0, 0),
+          new Vector(320.0, 342.0, 0),
+          new Vector(415.0, 290.0, 0),
+          new Vector(434.0, 220.0, 0)
+        ];
+        static Path _diag3Path = new Path(_diag3PathCoordinates);
   
   static List<Path> paths = [
-    _circlePath, _diag1Path
+    _circlePath, _diag1Path, _diag2Path, _diag3Path
   ];
   
   //End
